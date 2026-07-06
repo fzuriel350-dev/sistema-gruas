@@ -14,7 +14,7 @@ class EmpleadoController extends Controller
     {
         $this->authorize('admin');
         $empleados = Empleado::where('empresa_id', session('empresa_id'))
-            ->with('usuario')
+            ->with('usuario', 'oficina')
             ->orderBy('nombre')
             ->paginate(15);
         return view('empleados.index', compact('empleados'));
@@ -23,7 +23,10 @@ class EmpleadoController extends Controller
     public function create()
     {
         $this->authorize('admin');
-        return view('empleados.create');
+        $oficinas = \App\Models\Oficina::where('empresa_id', session('empresa_id'))
+            ->orderBy('nombre')
+            ->get();
+        return view('empleados.create', compact('oficinas'));
     }
 
     public function store(Request $request)
@@ -35,6 +38,9 @@ class EmpleadoController extends Controller
             'apellido_materno' => 'nullable|string|max:255',
             'telefono' => 'nullable|string|max:20',
             'direccion' => 'nullable|string',
+            'oficina_id' => 'nullable|exists:oficinas,id',
+            'puesto' => 'nullable|string|max:255',
+            'sueldo_diario' => 'nullable|numeric|min:0',
             'email' => 'required|email|unique:users,email',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'role' => 'required|in:admin,cotizador,operador',
@@ -49,6 +55,9 @@ class EmpleadoController extends Controller
             'apellido_materno' => $data['apellido_materno'] ?? '',
             'telefono' => $data['telefono'] ?? '',
             'direccion' => $data['direccion'] ?? '',
+            'oficina_id' => $data['oficina_id'] ?? null,
+            'puesto' => $data['puesto'] ?? '',
+            'sueldo_diario' => $data['sueldo_diario'] ?? 0,
         ]);
 
         $user = User::create([
@@ -74,7 +83,7 @@ class EmpleadoController extends Controller
     public function show(Empleado $empleado)
     {
         $this->authorize('admin');
-        $empleado->load('usuario', 'operador');
+        $empleado->load('usuario', 'operador', 'oficina');
         return view('empleados.show', compact('empleado'));
     }
 
@@ -82,7 +91,10 @@ class EmpleadoController extends Controller
     {
         $this->authorize('admin');
         $empleado->load('usuario');
-        return view('empleados.edit', compact('empleado'));
+        $oficinas = \App\Models\Oficina::where('empresa_id', session('empresa_id'))
+            ->orderBy('nombre')
+            ->get();
+        return view('empleados.edit', compact('empleado', 'oficinas'));
     }
 
     public function update(Request $request, Empleado $empleado)
@@ -94,6 +106,9 @@ class EmpleadoController extends Controller
             'apellido_materno' => 'nullable|string|max:255',
             'telefono' => 'nullable|string|max:20',
             'direccion' => 'nullable|string',
+            'oficina_id' => 'nullable|exists:oficinas,id',
+            'puesto' => 'nullable|string|max:255',
+            'sueldo_diario' => 'nullable|numeric|min:0',
             'email' => 'required|email|unique:users,email,' . $empleado->usuario?->id,
             'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
             'role' => 'required|in:admin,cotizador,operador',
@@ -105,6 +120,9 @@ class EmpleadoController extends Controller
             'apellido_materno' => $data['apellido_materno'] ?? '',
             'telefono' => $data['telefono'] ?? '',
             'direccion' => $data['direccion'] ?? '',
+            'oficina_id' => $data['oficina_id'] ?? null,
+            'puesto' => $data['puesto'] ?? '',
+            'sueldo_diario' => $data['sueldo_diario'] ?? 0,
         ]);
 
         if ($empleado->usuario) {

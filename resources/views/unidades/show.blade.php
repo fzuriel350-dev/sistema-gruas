@@ -13,9 +13,17 @@
 <div class="card-header"><h3>Datos de la unidad</h3></div>
 <div class="card-body">
 <div class="grid grid-cols-2 gap-4 text-sm">
+                <div>
+<span class="text-gray-500">ID</span>
+<p class="font-semibold mt-0.5">{{ $unidad->id }}</p>
+</div>
 <div>
 <span class="text-gray-500">Marca</span>
 <p class="font-semibold mt-0.5">{{ $unidad->marca }}</p>
+</div>
+<div>
+<span class="text-gray-500">Modelo</span>
+<p class="font-semibold mt-0.5">{{ $unidad->modelo ?: '—' }}</p>
 </div>
 <div>
 <span class="text-gray-500">Tipo</span>
@@ -30,8 +38,24 @@
 <p class="font-semibold mt-0.5">{{ $unidad->placas }}</p>
 </div>
 <div>
+<span class="text-gray-500">Número económico</span>
+<p class="font-semibold mt-0.5">{{ $unidad->numero_economico ?: '—' }}</p>
+</div>
+<div>
 <span class="text-gray-500">Número de serie</span>
 <p class="font-semibold mt-0.5">{{ $unidad->numero_serie ?? '—' }}</p>
+</div>
+<div>
+<span class="text-gray-500">Estado emplacado</span>
+<p class="font-semibold mt-0.5">{{ $unidad->estado_emplacado ?: '—' }}</p>
+</div>
+<div>
+<span class="text-gray-500">Oficina</span>
+<p class="font-semibold mt-0.5">{{ $unidad->oficina?->nombre ?: '—' }}</p>
+</div>
+<div>
+<span class="text-gray-500">Activo</span>
+<p class="font-semibold mt-0.5">{{ $unidad->activo ? 'Sí' : 'No' }}</p>
 </div>
 <div>
 <span class="text-gray-500">Vencimiento de seguro</span>
@@ -42,9 +66,19 @@
 <p class="font-semibold mt-0.5">{{ $unidad->operador?->empleado?->nombreCompleto() ?: 'Sin asignar' }}</p>
 </div>
 <div>
-<span class="text-gray-500">Registrado</span>
-<p class="font-semibold mt-0.5">{{ $unidad->created_at->format('d/m/Y') }}</p>
+<span class="text-gray-500">Creado</span>
+<p class="font-semibold mt-0.5">{{ $unidad->created_at->format('d/m/Y H:i') }}</p>
 </div>
+<div>
+<span class="text-gray-500">Actualizado</span>
+<p class="font-semibold mt-0.5">{{ $unidad->updated_at->format('d/m/Y H:i') }}</p>
+</div>
+@if ($unidad->trashed())
+<div>
+<span class="text-gray-500">Eliminado</span>
+<p class="font-semibold mt-0.5 text-red-600">{{ $unidad->deleted_at->format('d/m/Y H:i') }}</p>
+</div>
+@endif
 </div>
 </div>
 </div>

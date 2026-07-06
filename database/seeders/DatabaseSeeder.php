@@ -14,6 +14,13 @@ use App\Models\Operador;
 use App\Models\Unidad;
 use App\Models\Servicio;
 use App\Models\Notificacion;
+use App\Models\Oficina;
+use App\Models\CargaDiesel;
+use App\Models\BitacoraTiempoServicio;
+use App\Models\AutorizacionCancelacion;
+use App\Models\Factura;
+use App\Models\ControlNomina;
+use App\Models\ServicioConfigurado;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -40,14 +47,28 @@ class DatabaseSeeder extends Seeder
             'notificaciones_habilitadas' => true,
         ]);
 
-        // 2. Empleados con usuarios
+        // 2. Oficina
+        $oficina = Oficina::create([
+            'empresa_id' => $empresa->id,
+            'nombre' => 'Base Central',
+            'direccion' => 'Av. Reforma 250, Col. Juárez, CDMX',
+            'ciudad' => 'Ciudad de México',
+            'estado' => 'CDMX',
+            'telefono' => '55 5555 1234',
+            'encargado' => 'Admin Sistema',
+        ]);
+
+        // 3. Empleados con usuarios
         $adminEmp = Empleado::create([
             'empresa_id' => $empresa->id,
+            'oficina_id' => $oficina->id,
             'nombre' => 'Admin',
             'apellido_paterno' => 'Sistema',
             'apellido_materno' => '',
             'telefono' => '55 1111 0001',
             'direccion' => 'Oficinas Centrales',
+            'puesto' => 'Administrador General',
+            'sueldo_diario' => 800.00,
         ]);
 
         $adminUser = User::create([
@@ -61,10 +82,14 @@ class DatabaseSeeder extends Seeder
 
         $cotEmp = Empleado::create([
             'empresa_id' => $empresa->id,
+            'oficina_id' => $oficina->id,
             'nombre' => 'Carlos',
             'apellido_paterno' => 'López',
             'apellido_materno' => 'Mendoza',
             'telefono' => '55 2222 0002',
+            'direccion' => 'Av. Reforma 222, Col. Juárez',
+            'puesto' => 'Cotizador',
+            'sueldo_diario' => 500.00,
         ]);
 
         $cotUser = User::create([
@@ -79,10 +104,14 @@ class DatabaseSeeder extends Seeder
         // Operador 1
         $op1Emp = Empleado::create([
             'empresa_id' => $empresa->id,
+            'oficina_id' => $oficina->id,
             'nombre' => 'Luis',
             'apellido_paterno' => 'Hernández',
             'apellido_materno' => 'García',
             'telefono' => '55 3333 0003',
+            'direccion' => 'Calle 5 de Mayo 345, Col. Centro',
+            'puesto' => 'Operador de Grúa',
+            'sueldo_diario' => 450.00,
         ]);
 
         $op1User = User::create([
@@ -99,19 +128,25 @@ class DatabaseSeeder extends Seeder
             'empleado_id' => $op1Emp->id,
             'licencia_tipo' => 'B',
             'licencia_año_vencimiento' => '2028-06-15',
+            'licencia_vencimiento_federal' => '2028-06-15',
             'disponible' => false,
+            'puntos_acumulados' => 2,
         ]);
 
         // Operador 2
         $op2Emp = Empleado::create([
             'empresa_id' => $empresa->id,
+            'oficina_id' => $oficina->id,
             'nombre' => 'María',
             'apellido_paterno' => 'Torres',
             'apellido_materno' => 'Rivas',
             'telefono' => '55 4444 0004',
+            'direccion' => 'Insurgentes Sur 567, Col. Del Valle',
+            'puesto' => 'Operadora de Grúa',
+            'sueldo_diario' => 450.00,
         ]);
 
-        User::create([
+        $op2User = User::create([
             'empresa_id' => $empresa->id,
             'empleado_id' => $op2Emp->id,
             'name' => 'María Torres',
@@ -125,105 +160,65 @@ class DatabaseSeeder extends Seeder
             'empleado_id' => $op2Emp->id,
             'licencia_tipo' => 'C',
             'licencia_año_vencimiento' => '2027-03-20',
+            'licencia_vencimiento_federal' => '2027-03-20',
             'disponible' => true,
+            'puntos_acumulados' => 0,
         ]);
 
-        // 3. Unidades
+        // 4. Unidades
         $unidad1 = Unidad::create([
             'empresa_id' => $empresa->id,
+            'oficina_id' => $oficina->id,
             'marca' => 'Ford',
             'tipo' => 'Plataforma',
+            'modelo' => 'F-550',
             'año' => 2022,
             'placas' => 'GRU-001',
+            'numero_economico' => 'ECO-001',
             'numero_serie' => '1FT7X2BT6NE123456',
+            'estado_emplacado' => 'CDMX',
             'seguro_vencimiento' => '2027-01-15',
+            'activo' => true,
             'operador_id' => $operador1->id,
         ]);
 
         $unidad2 = Unidad::create([
             'empresa_id' => $empresa->id,
+            'oficina_id' => $oficina->id,
             'marca' => 'Ram',
             'tipo' => 'Grúa Pluma',
+            'modelo' => '5500',
             'año' => 2023,
             'placas' => 'GRU-002',
+            'numero_economico' => 'ECO-002',
             'numero_serie' => '3C6UR5DL0PG789012',
+            'estado_emplacado' => 'CDMX',
             'seguro_vencimiento' => '2027-06-30',
+            'activo' => true,
             'operador_id' => $operador2->id,
         ]);
 
         $unidad3 = Unidad::create([
             'empresa_id' => $empresa->id,
+            'oficina_id' => $oficina->id,
             'marca' => 'International',
             'tipo' => 'Plataforma Pesada',
+            'modelo' => 'HV507',
             'año' => 2021,
             'placas' => 'GRU-003',
+            'numero_economico' => 'ECO-003',
             'numero_serie' => '1HTMKAFT2MH345678',
+            'estado_emplacado' => 'México',
             'seguro_vencimiento' => '2026-12-01',
-        ]);
-
-        // 4. Clientes
-        $cliente1 = Cliente::create([
-            'empresa_id' => $empresa->id,
-            'nombre' => 'Juan Pérez',
-            'empresa' => null,
-            'telefono' => '55 1234 5678',
-            'direccion' => 'Insurgentes Sur 123, CDMX',
-            'contacto' => 'Juan Pérez',
-        ]);
-
-        $cliente2 = Cliente::create([
-            'empresa_id' => $empresa->id,
-            'nombre' => 'María López',
-            'empresa' => null,
-            'telefono' => '55 9876 5432',
-            'direccion' => 'Av. Universidad 456, CDMX',
-            'contacto' => 'María López',
-        ]);
-
-        $cliente3 = Cliente::create([
-            'empresa_id' => $empresa->id,
-            'nombre' => 'Roberto Díaz',
-            'empresa' => 'Seguros GNP',
-            'telefono' => '55 5678 9012',
-            'direccion' => 'Paseo de la Reforma 789, CDMX',
-            'contacto' => 'Roberto Díaz',
-        ]);
-
-        $cliente4 = Cliente::create([
-            'empresa_id' => $empresa->id,
-            'nombre' => 'Ana Martínez',
-            'empresa' => 'Autopistas del Valle',
-            'telefono' => '55 3456 7890',
-            'direccion' => 'Periférico Sur 1000, CDMX',
-            'contacto' => 'Lic. Ana Martínez',
-        ]);
-
-        $cliente5 = Cliente::create([
-            'empresa_id' => $empresa->id,
-            'nombre' => 'Pedro Sánchez',
-            'empresa' => 'Transportes del Norte',
-            'telefono' => '81 2345 6789',
-            'direccion' => 'Av. Constitución 500, Monterrey',
-            'contacto' => 'Pedro Sánchez',
-        ]);
-
-        $cliente6 = Cliente::create([
-            'empresa_id' => $empresa->id,
-            'nombre' => 'Laura Castillo',
-            'empresa' => 'Aseguradora Qualitas',
-            'telefono' => '55 1111 2222',
-            'direccion' => 'Santa Fe 300, CDMX',
-            'contacto' => 'Lic. Laura Castillo',
+            'activo' => true,
         ]);
 
         // 5. Aseguradoras
-        $qualitas = Aseguradora::where('empresa_id', $empresa->id)->where('nombre', 'Quálitas')->first()
-            ?? Aseguradora::create(['empresa_id' => $empresa->id, 'nombre' => 'Quálitas']);
-
-        $gnp = Aseguradora::create(['empresa_id' => $empresa->id, 'nombre' => 'GNP']);
-        $axa = Aseguradora::create(['empresa_id' => $empresa->id, 'nombre' => 'AXA']);
-        $bbva = Aseguradora::create(['empresa_id' => $empresa->id, 'nombre' => 'BBVA Seguros']);
-        $mapfre = Aseguradora::create(['empresa_id' => $empresa->id, 'nombre' => 'Mapfre']);
+        $qualitas = Aseguradora::create(['empresa_id' => $empresa->id, 'nombre' => 'Quálitas', 'telefono' => '55 1000 2001']);
+        $gnp = Aseguradora::create(['empresa_id' => $empresa->id, 'nombre' => 'GNP', 'telefono' => '55 2000 3002']);
+        $axa = Aseguradora::create(['empresa_id' => $empresa->id, 'nombre' => 'AXA', 'telefono' => '55 3000 4003']);
+        $bbva = Aseguradora::create(['empresa_id' => $empresa->id, 'nombre' => 'BBVA Seguros', 'telefono' => '55 4000 5004']);
+        $mapfre = Aseguradora::create(['empresa_id' => $empresa->id, 'nombre' => 'Mapfre', 'telefono' => '55 5000 6005']);
 
         // 6. Tipos de Servicio
         $arrastre = TipoServicio::create([
@@ -244,6 +239,104 @@ class DatabaseSeeder extends Seeder
             'descripcion' => 'Asistencia vial básica: paso de corriente, cambio de llanta, etc.',
         ]);
 
+        // 7. Clientes
+        $cliente1 = Cliente::create([
+            'empresa_id' => $empresa->id,
+            'nombre' => 'Juan Pérez',
+            'empresa' => null,
+            'telefono' => '55 1234 5678',
+            'direccion' => 'Insurgentes Sur 123, CDMX',
+            'contacto' => 'Juan Pérez',
+            'email' => 'juan@example.com',
+            'aseguradora_id' => $qualitas->id,
+            'numero_poliza' => 'POL-QLT-2026-100',
+            'tipo_cobertura_poliza' => 'Amplia',
+            'created_at' => now()->subDays(30),
+            'updated_at' => now()->subDays(5),
+        ]);
+
+        $cliente2 = Cliente::create([
+            'empresa_id' => $empresa->id,
+            'nombre' => 'María López',
+            'empresa' => null,
+            'telefono' => '55 9876 5432',
+            'direccion' => 'Av. Universidad 456, CDMX',
+            'contacto' => 'María López',
+            'email' => 'maria@example.com',
+            'aseguradora_id' => $axa->id,
+            'numero_poliza' => 'POL-AXA-2026-050',
+            'tipo_cobertura_poliza' => 'Limitada',
+            'created_at' => now()->subDays(25),
+            'updated_at' => now()->subDays(2),
+        ]);
+
+        $cliente3 = Cliente::create([
+            'empresa_id' => $empresa->id,
+            'nombre' => 'Roberto Díaz',
+            'empresa' => 'Seguros GNP',
+            'telefono' => '55 5678 9012',
+            'direccion' => 'Paseo de la Reforma 789, CDMX',
+            'contacto' => 'Roberto Díaz',
+            'email' => 'rdiaz@gnp.com.mx',
+            'aseguradora_id' => $gnp->id,
+            'numero_poliza' => 'POL-GNP-2026-001',
+            'tipo_cobertura_poliza' => 'Amplia',
+        ]);
+
+        $cliente4 = Cliente::create([
+            'empresa_id' => $empresa->id,
+            'nombre' => 'Ana Martínez',
+            'empresa' => 'Autopistas del Valle',
+            'telefono' => '55 3456 7890',
+            'direccion' => 'Periférico Sur 1000, CDMX',
+            'contacto' => 'Lic. Ana Martínez',
+            'email' => 'amartinez@autopistas.com',
+            'aseguradora_id' => $bbva->id,
+            'numero_poliza' => 'POL-BBVA-2026-888',
+            'tipo_cobertura_poliza' => 'Amplia',
+            'created_at' => now()->subDays(20),
+            'updated_at' => now()->subDay(),
+        ]);
+
+        $cliente5 = Cliente::create([
+            'empresa_id' => $empresa->id,
+            'nombre' => 'Pedro Sánchez',
+            'empresa' => 'Transportes del Norte',
+            'telefono' => '81 2345 6789',
+            'direccion' => 'Av. Constitución 500, Monterrey',
+            'contacto' => 'Pedro Sánchez',
+            'email' => 'pedro@transportesnorte.com',
+            'aseguradora_id' => $mapfre->id,
+            'numero_poliza' => 'POL-MAP-2026-321',
+            'tipo_cobertura_poliza' => 'Limitada',
+            'created_at' => now()->subDays(15),
+            'updated_at' => now()->subDays(6),
+        ]);
+
+        $cliente6 = Cliente::create([
+            'empresa_id' => $empresa->id,
+            'nombre' => 'Laura Castillo',
+            'empresa' => 'Aseguradora Qualitas',
+            'telefono' => '55 1111 2222',
+            'direccion' => 'Santa Fe 300, CDMX',
+            'contacto' => 'Lic. Laura Castillo',
+            'email' => 'lcastillo@qualitas.com.mx',
+            'aseguradora_id' => $qualitas->id,
+            'numero_poliza' => 'POL-QLT-2026-045',
+            'tipo_cobertura_poliza' => 'Limitada',
+            'created_at' => now()->subDays(60),
+            'updated_at' => now()->subDays(10),
+        ]);
+
+        User::create([
+            'empresa_id' => $empresa->id,
+            'empleado_id' => null,
+            'name' => 'Juan Pérez',
+            'email' => 'cliente@gruas.com',
+            'password' => bcrypt('password'),
+            'role' => 'cliente',
+        ]);
+
         // 7. Convenios
         Convenio::create([
             'empresa_id' => $empresa->id,
@@ -254,6 +347,7 @@ class DatabaseSeeder extends Seeder
             'costo_banderazo' => 450.00,
             'costo_km' => 100.00,
             'km_incluidos' => 5,
+            'cubre_casetas_peaje' => true,
             'descuento' => 10,
             'cobertura' => 'parcial',
         ]);
@@ -267,6 +361,7 @@ class DatabaseSeeder extends Seeder
             'costo_banderazo' => 650.00,
             'costo_km' => 85.00,
             'km_incluidos' => 10,
+            'cubre_casetas_peaje' => true,
             'descuento' => 15,
             'cobertura' => 'total',
         ]);
@@ -278,34 +373,18 @@ class DatabaseSeeder extends Seeder
             'aseguradora_id' => $qualitas->id,
             'tipo_servicio_id' => $arrastre->id,
             'folio' => 'COT-0001',
-            'origen' => 'Insurgentes Sur 123, CDMX',
-            'destino' => 'Periférico 456, CDMX',
+            'origen_direccion' => 'Insurgentes Sur 123, CDMX',
+            'destino_direccion' => 'Periférico 456, CDMX',
             'distancia_km' => 12,
-            'tiempo_estimado' => 30,
-            'tipo_ruta' => 'local',
+            'tiempo_estimado_minutos' => 30,
             'costo_banderazo' => 450.00,
             'costo_km' => 100.00,
             'km_excedente' => 7,
-            'costo_kilometraje' => 1200.00,
-            'costo_casetas' => 0,
-            'extras' => 0,
-            'subtotal' => 1650.00,
-            'descuento_porcentaje' => 10,
-            'descuento_monto' => 165.00,
-            'iva' => 237.60,
-            'costo_total' => 1722.60,
-            'no_poliza' => 'POL-2026-001',
-            'marca' => 'Nissan',
-            'modelo' => 'Versa 2020',
-            'color' => 'Gris',
-            'placas' => 'NVE-1234',
-            'con_peaje' => false,
-            'num_casetas' => 0,
-            'costo_casetas' => 0,
-            'cobertura' => 'parcial',
-            'convenio_id' => 1,
-            'notas' => 'Cliente frecuente, aplicar descuento por convenio',
-            'created_by' => $cotUser->id,
+            'incluye_peajes' => false,
+            'costo_aprox_casetas' => 0,
+            'costo_total' => 1650.00,
+            'convenio_aplicado_id' => 1,
+            'usuario_creador_id' => $cotUser->id,
             'estatus' => 'aprobado',
             'created_at' => now()->subDays(5),
             'updated_at' => now()->subDays(4),
@@ -317,33 +396,17 @@ class DatabaseSeeder extends Seeder
             'aseguradora_id' => $axa->id,
             'tipo_servicio_id' => $rescate->id,
             'folio' => 'COT-0002',
-            'origen' => 'Av. Universidad 456, CDMX',
-            'destino' => 'Taller Mecánico - Calzada Taxqueña',
+            'origen_direccion' => 'Av. Universidad 456, CDMX',
+            'destino_direccion' => 'Taller Mecánico - Calzada Taxqueña',
             'distancia_km' => 8,
-            'tiempo_estimado' => 20,
-            'tipo_ruta' => 'local',
+            'tiempo_estimado_minutos' => 20,
             'costo_banderazo' => 500.00,
             'costo_km' => 90.00,
             'km_excedente' => 3,
-            'costo_kilometraje' => 720.00,
-            'costo_casetas' => 0,
-            'extras' => 200.00,
-            'subtotal' => 1420.00,
-            'descuento_porcentaje' => 0,
-            'descuento_monto' => 0,
-            'iva' => 227.20,
-            'costo_total' => 1647.20,
-            'no_poliza' => 'POL-2026-002',
-            'marca' => 'Toyota',
-            'modelo' => 'Corolla 2022',
-            'color' => 'Blanco',
-            'placas' => 'TOC-5678',
-            'con_peaje' => false,
-            'num_casetas' => 0,
-            'costo_casetas' => 0,
-            'cobertura' => 'sin_cobertura',
-            'notas' => 'Servicio urgente, vehículo descompuesto en vía pública',
-            'created_by' => $cotUser->id,
+            'incluye_peajes' => false,
+            'costo_aprox_casetas' => 0,
+            'costo_total' => 1220.00,
+            'usuario_creador_id' => $cotUser->id,
             'estatus' => 'pendiente',
             'created_at' => now()->subDays(2),
             'updated_at' => now()->subDays(2),
@@ -355,34 +418,18 @@ class DatabaseSeeder extends Seeder
             'aseguradora_id' => $gnp->id,
             'tipo_servicio_id' => $arrastre->id,
             'folio' => 'COT-0003',
-            'origen' => 'Paseo de la Reforma 789, CDMX',
-            'destino' => 'Autopista México-Puebla Km 45',
+            'origen_direccion' => 'Paseo de la Reforma 789, CDMX',
+            'destino_direccion' => 'Autopista México-Puebla Km 45',
             'distancia_km' => 65,
-            'tiempo_estimado' => 90,
-            'tipo_ruta' => 'foraneo',
+            'tiempo_estimado_minutos' => 90,
             'costo_banderazo' => 650.00,
             'costo_km' => 85.00,
             'km_excedente' => 55,
-            'costo_kilometraje' => 5525.00,
-            'costo_casetas' => 3,
-            'extras' => 0,
-            'subtotal' => 6175.00,
-            'descuento_porcentaje' => 15,
-            'descuento_monto' => 926.25,
-            'iva' => 839.80,
-            'costo_total' => 6088.55,
-            'no_poliza' => 'POL-2026-003',
-            'marca' => 'Kenworth',
-            'modelo' => 'T680 2023',
-            'color' => 'Rojo',
-            'placas' => 'KEN-9012',
-            'con_peaje' => true,
-            'num_casetas' => 3,
-            'costo_casetas' => 570.00,
-            'cobertura' => 'total',
-            'convenio_id' => $convenioGnp->id,
-            'notas' => 'Unidad siniestrada, requiere grúa de plataforma pesada',
-            'created_by' => $adminUser->id,
+            'incluye_peajes' => true,
+            'costo_aprox_casetas' => 570.00,
+            'costo_total' => 6745.00,
+            'convenio_aplicado_id' => $convenioGnp->id,
+            'usuario_creador_id' => $adminUser->id,
             'estatus' => 'aprobado',
             'created_at' => now()->subDays(3),
             'updated_at' => now()->subDays(1),
@@ -394,34 +441,18 @@ class DatabaseSeeder extends Seeder
             'aseguradora_id' => $bbva->id,
             'tipo_servicio_id' => $auxilio->id,
             'folio' => 'COT-0004',
-            'origen' => 'Periférico Sur 1000, CDMX',
-            'destino' => 'Periférico Sur 1000, CDMX (mismo lugar)',
+            'origen_direccion' => 'Periférico Sur 1000, CDMX',
+            'destino_direccion' => 'Periférico Sur 1000, CDMX (mismo lugar)',
             'distancia_km' => 0,
-            'tiempo_estimado' => 15,
-            'tipo_ruta' => 'local',
+            'tiempo_estimado_minutos' => 15,
             'costo_banderazo' => 350.00,
             'costo_km' => 0,
             'km_excedente' => 0,
-            'costo_kilometraje' => 0,
-            'costo_casetas' => 0,
-            'extras' => 0,
-            'subtotal' => 350.00,
-            'descuento_porcentaje' => 0,
-            'descuento_monto' => 0,
-            'iva' => 56.00,
-            'costo_total' => 406.00,
-            'no_poliza' => 'POL-2026-004',
-            'marca' => 'Volkswagen',
-            'modelo' => 'Jetta 2019',
-            'color' => 'Azul',
-            'placas' => 'VWJ-3456',
-            'con_peaje' => false,
-            'num_casetas' => 0,
-            'costo_casetas' => 0,
-            'cobertura' => 'sin_cobertura',
-            'notas' => 'Cambio de llanta, servicio express',
-            'created_by' => $cotUser->id,
-            'estatus' => 'borrador',
+            'incluye_peajes' => false,
+            'costo_aprox_casetas' => 0,
+            'costo_total' => 350.00,
+            'usuario_creador_id' => $cotUser->id,
+            'estatus' => 'pendiente',
             'created_at' => now()->subDay(),
             'updated_at' => now()->subDay(),
         ]);
@@ -432,72 +463,70 @@ class DatabaseSeeder extends Seeder
             'aseguradora_id' => $mapfre->id,
             'tipo_servicio_id' => $rescate->id,
             'folio' => 'COT-0005',
-            'origen' => 'Av. Constitución 500, Monterrey',
-            'destino' => 'Autopista Monterrey-Saltillo Km 120',
+            'origen_direccion' => 'Av. Constitución 500, Monterrey',
+            'destino_direccion' => 'Autopista Monterrey-Saltillo Km 120',
             'distancia_km' => 180,
-            'tiempo_estimado' => 150,
-            'tipo_ruta' => 'foraneo',
+            'tiempo_estimado_minutos' => 150,
             'costo_banderazo' => 800.00,
             'costo_km' => 95.00,
             'km_excedente' => 170,
-            'costo_kilometraje' => 17100.00,
-            'costo_casetas' => 4,
-            'extras' => 500.00,
-            'subtotal' => 18400.00,
-            'descuento_porcentaje' => 0,
-            'descuento_monto' => 0,
-            'iva' => 2944.00,
-            'costo_total' => 21344.00,
-            'no_poliza' => 'POL-2026-005',
-            'marca' => 'Freightliner',
-            'modelo' => 'Cascadia 2024',
-            'color' => 'Blanco',
-            'placas' => 'FRE-7890',
-            'con_peaje' => true,
-            'num_casetas' => 4,
-            'costo_casetas' => 760.00,
-            'cobertura' => 'sin_cobertura',
-            'notas' => 'Tráiler volcado, requiere grúa de gran capacidad',
-            'created_by' => $adminUser->id,
+            'incluye_peajes' => true,
+            'costo_aprox_casetas' => 760.00,
+            'costo_total' => 18660.00,
+            'usuario_creador_id' => $adminUser->id,
             'estatus' => 'rechazado',
             'created_at' => now()->subDays(7),
             'updated_at' => now()->subDays(6),
         ]);
 
         // 9. Servicios
-        Servicio::create([
+        $servicio1 = Servicio::create([
             'empresa_id' => $empresa->id,
             'cotizacion_id' => $cot1->id,
             'operador_id' => $operador1->id,
             'unidad_id' => $unidad1->id,
+            'oficina_id' => $oficina->id,
             'tipo_servicio_id' => 1,
             'estado' => 'finalizado',
             'fecha_inicio' => now()->subDays(4)->setHour(10)->setMinute(0),
             'fecha_fin' => now()->subDays(4)->setHour(10)->setMinute(45),
+            'kms_salida' => 15230,
+            'kms_llegada_cliente' => 15242,
+            'kms_termino_servicio' => 15255,
+            'kms_regreso_base' => 15270,
+            'kms_cobrados_reales' => 12,
+            'costo_final_real' => 1722.60,
+            'observaciones' => 'Servicio completado sin contratiempos',
             'created_at' => now()->subDays(4),
             'updated_at' => now()->subDays(4),
         ]);
 
-        Servicio::create([
+        $servicio2 = Servicio::create([
             'empresa_id' => $empresa->id,
             'cotizacion_id' => $cot3->id,
             'operador_id' => $operador1->id,
             'unidad_id' => $unidad3->id,
+            'oficina_id' => $oficina->id,
             'tipo_servicio_id' => 2,
-            'estado' => 'en_proceso',
+            'estado' => 'inicio_servicio',
             'fecha_inicio' => now()->setHour(9)->setMinute(30),
+            'kms_salida' => 45210,
+            'kms_llegada_cliente' => 45235,
+            'observaciones' => 'Servicio en proceso, unidad en camino',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
-        Servicio::create([
+        $servicio3 = Servicio::create([
             'empresa_id' => $empresa->id,
             'cotizacion_id' => $cot2->id,
             'operador_id' => $operador2->id,
             'unidad_id' => $unidad2->id,
+            'oficina_id' => $oficina->id,
             'tipo_servicio_id' => 3,
             'estado' => 'asignado',
             'fecha_inicio' => now()->addHours(2),
+            'kms_salida' => 32100,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -516,6 +545,7 @@ class DatabaseSeeder extends Seeder
             $data = [
                 'empresa_id' => $empresa->id,
                 'mensaje' => $n['mensaje'],
+                'canal' => 'sistema_push',
                 'tipo' => $n['tipo'],
                 'estado' => 'no_leida',
                 'created_at' => now()->subHours(rand(1, 48)),
@@ -525,5 +555,130 @@ class DatabaseSeeder extends Seeder
             }
             Notificacion::create($data);
         }
+
+        // 11. Oficina — creada en sección 2
+
+        // 12. Bitácora de Tiempos (para servicio finalizado)
+        $servicioFinalizado = Servicio::where('estado', 'finalizado')->first();
+        if ($servicioFinalizado) {
+            BitacoraTiempoServicio::create([
+                'servicio_id' => $servicioFinalizado->id,
+                'hora_asignado' => now()->subDays(4)->setHour(9)->setMinute(0),
+                'hora_inicio_servicio' => now()->subDays(4)->setHour(9)->setMinute(30),
+                'hora_en_sitio_origen' => now()->subDays(4)->setHour(10)->setMinute(0),
+                'hora_salida_destino' => now()->subDays(4)->setHour(10)->setMinute(10),
+                'hora_en_destino' => now()->subDays(4)->setHour(10)->setMinute(35),
+                'hora_finalizado' => now()->subDays(4)->setHour(10)->setMinute(45),
+            ]);
+        }
+
+        // 13. Factura (para servicio finalizado)
+        if ($servicioFinalizado) {
+            Factura::create([
+                'empresa_id' => $empresa->id,
+                'cliente_id' => $cliente1->id,
+                'servicio_id' => $servicioFinalizado->id,
+                'folio_factura' => 'FAC-0001',
+                'subtotal' => 1650.00,
+                'iva' => 264.00,
+                'total' => 1914.00,
+                'estatus' => 'vigente',
+            ]);
+        }
+
+        // 14. Control Nómina
+        ControlNomina::create([
+            'empresa_id' => $empresa->id,
+            'operador_id' => $operador1->id,
+            'fecha_desde' => now()->startOfWeek(),
+            'fecha_hasta' => now()->endOfWeek(),
+            'sueldo_base_semanal' => 3500.00,
+            'bonos_servicios' => 500.00,
+            'descuentos_prestamos' => 200.00,
+            'total_neto_a_pagar' => 3800.00,
+            'estatus' => 'pendiente',
+        ]);
+
+        // 15. Cargas Diesel
+        CargaDiesel::create([
+            'empresa_id' => $empresa->id,
+            'unidad_id' => $unidad1->id,
+            'operador_id' => $operador1->id,
+            'litros' => 150.00,
+            'costo_litro' => 24.50,
+            'importe_total' => 3675.00,
+            'km_actual' => 15270,
+            'fecha_carga' => now()->subDays(3)->setHour(7)->setMinute(30),
+            'observaciones' => 'Carga completa en estación Base Central',
+        ]);
+
+        CargaDiesel::create([
+            'empresa_id' => $empresa->id,
+            'unidad_id' => $unidad2->id,
+            'operador_id' => $operador2->id,
+            'litros' => 80.00,
+            'costo_litro' => 24.80,
+            'importe_total' => 1984.00,
+            'km_actual' => 32150,
+            'fecha_carga' => now()->subDay()->setHour(6)->setMinute(45),
+            'observaciones' => 'Recarga para servicio del día',
+        ]);
+
+        // 16. Autorizaciones Cancelación
+        AutorizacionCancelacion::create([
+            'servicio_id' => $servicio1->id,
+            'usuario_solicitante_id' => $op1User->id,
+            'motivo_cancelacion' => 'El cliente reportó que ya no requiere el servicio después de intentar contactarlo',
+            'tipo_incidencia' => 'cliente_cancela',
+            'estatus' => 'rechazada',
+            'fecha_solicitud' => now()->subDays(3)->setHour(14)->setMinute(0),
+            'fecha_resolucion' => now()->subDays(3)->setHour(16)->setMinute(30),
+            'usuario_resolutor_id' => $adminUser->id,
+        ]);
+
+        AutorizacionCancelacion::create([
+            'servicio_id' => $servicio3->id,
+            'usuario_solicitante_id' => $op2User->id,
+            'motivo_cancelacion' => 'La unidad presentó falla mecánica antes de salir a ruta',
+            'tipo_incidencia' => 'falla_mecanica',
+            'estatus' => 'pendiente',
+            'fecha_solicitud' => now()->subHours(2),
+        ]);
+
+        // 17. Servicios Configurados
+        ServicioConfigurado::create([
+            'empresa_id' => $empresa->id,
+            'cliente_id' => $cliente3->id,
+            'tipo_servicio_id' => $arrastre->id,
+            'nombre' => 'Arrastre GNP - Plataforma Pesada',
+            'tipo' => 'aseguradora',
+            'costo_banderazo' => 650.00,
+            'costo_km' => 85.00,
+            'activo' => true,
+            'observaciones' => 'Servicio contratado por GNP para arrastre de unidades pesadas',
+        ]);
+
+        ServicioConfigurado::create([
+            'empresa_id' => $empresa->id,
+            'cliente_id' => $cliente1->id,
+            'tipo_servicio_id' => $arrastre->id,
+            'nombre' => 'Arrastre Local - Cliente Particular',
+            'tipo' => 'particular',
+            'costo_banderazo' => 450.00,
+            'costo_km' => 100.00,
+            'activo' => true,
+        ]);
+
+        ServicioConfigurado::create([
+            'empresa_id' => $empresa->id,
+            'cliente_id' => $cliente4->id,
+            'tipo_servicio_id' => $auxilio->id,
+            'nombre' => 'Auxilio Vial - Autopistas del Valle',
+            'tipo' => 'publico',
+            'costo_banderazo' => 350.00,
+            'costo_km' => 50.00,
+            'activo' => false,
+            'observaciones' => 'Servicio descontinuado desde enero 2026',
+        ]);
     }
 }

@@ -7,6 +7,7 @@ use App\Models\Cotizacion;
 use App\Models\Operador;
 use App\Models\TipoServicio;
 use App\Models\Unidad;
+use App\Models\Oficina;
 use Illuminate\Http\Request;
 
 class ServicioController extends Controller
@@ -15,11 +16,11 @@ class ServicioController extends Controller
     {
         $user = auth()->user();
         $query = Servicio::where('empresa_id', session('empresa_id'))
-            ->with('cotizacion.cliente', 'operador.empleado', 'unidad', 'tipoServicio');
+            ->with('cotizacion.cliente', 'operador.empleado', 'unidad', 'tipoServicio', 'oficina');
 
         if ($user->isCliente()) {
             $query->whereHas('cotizacion', function ($q) use ($user) {
-                $q->where('created_by', $user->id);
+                $q->where('usuario_creador_id', $user->id);
             });
         } elseif ($user->isOperador()) {
             $query->where('operador_id', $user->empleado?->operador?->id);
@@ -56,7 +57,8 @@ class ServicioController extends Controller
             ->get();
         $unidades = Unidad::where('empresa_id', session('empresa_id'))->get();
         $tiposServicio = TipoServicio::where('empresa_id', session('empresa_id'))->get();
-        return view('servicios.create', compact('cotizaciones', 'operadores', 'unidades', 'tiposServicio'));
+        $oficinas = Oficina::where('empresa_id', session('empresa_id'))->get();
+        return view('servicios.create', compact('cotizaciones', 'operadores', 'unidades', 'tiposServicio', 'oficinas'));
     }
 
     public function store(Request $request)
@@ -67,8 +69,10 @@ class ServicioController extends Controller
             'operador_id' => 'required|exists:operadores,id',
             'unidad_id' => 'required|exists:unidades,id',
             'tipo_servicio_id' => 'required|exists:tipos_servicio,id',
+            'oficina_id' => 'nullable|exists:oficinas,id',
             'descripcion' => 'nullable|string|max:500',
             'fecha_inicio' => 'required|date',
+            'observaciones' => 'nullable|string',
         ]);
         $data['empresa_id'] = session('empresa_id');
         $data['estado'] = 'asignado';
@@ -81,7 +85,7 @@ class ServicioController extends Controller
 
     public function show(Servicio $servicio)
     {
-        $servicio->load('cotizacion.cliente', 'cotizacion.aseguradora', 'operador.empleado', 'unidad');
+        $servicio->load('cotizacion.cliente', 'cotizacion.aseguradora', 'operador.empleado', 'unidad', 'tipoServicio', 'oficina');
         return view('servicios.show', compact('servicio'));
     }
 
@@ -93,7 +97,8 @@ class ServicioController extends Controller
             ->get();
         $unidades = Unidad::where('empresa_id', session('empresa_id'))->get();
         $tiposServicio = TipoServicio::where('empresa_id', session('empresa_id'))->get();
-        return view('servicios.edit', compact('servicio', 'operadores', 'unidades', 'tiposServicio'));
+        $oficinas = Oficina::where('empresa_id', session('empresa_id'))->get();
+        return view('servicios.edit', compact('servicio', 'operadores', 'unidades', 'tiposServicio', 'oficinas'));
     }
 
     public function update(Request $request, Servicio $servicio)
@@ -102,9 +107,17 @@ class ServicioController extends Controller
         $data = $request->validate([
             'operador_id' => 'required|exists:operadores,id',
             'unidad_id' => 'required|exists:unidades,id',
-            'estado' => 'required|in:asignado,en_proceso,finalizado,cancelado',
+            'oficina_id' => 'nullable|exists:oficinas,id',
+            'estado' => 'required|in:' . implode(',', Servicio::ESTADOS),
             'fecha_inicio' => 'required|date',
             'fecha_fin' => 'nullable|date|after_or_equal:fecha_inicio',
+            'kms_salida' => 'nullable|integer|min:0',
+            'kms_llegada_cliente' => 'nullable|integer|min:0',
+            'kms_termino_servicio' => 'nullable|integer|min:0',
+            'kms_regreso_base' => 'nullable|integer|min:0',
+            'kms_cobrados_reales' => 'nullable|integer|min:0',
+            'costo_final_real' => 'nullable|numeric|min:0',
+            'observaciones' => 'nullable|string',
         ]);
         $servicio->update($data);
 

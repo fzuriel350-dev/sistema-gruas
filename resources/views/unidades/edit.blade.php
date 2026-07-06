@@ -16,9 +16,14 @@
 <x-input-error :messages="$errors->get('tipo')" />
 </div>
 <div class="form-group">
-<label for="ano" >Año</label>
-<input id="ano" name="ano" type="number" value="{{ old('ano', $unidad->año) }}" required>
-<x-input-error :messages="$errors->get('ano')" />
+<label for="modelo" >Modelo</label>
+<input id="modelo" name="modelo" type="text" value="{{ old('modelo', $unidad->modelo) }}">
+<x-input-error :messages="$errors->get('modelo')" />
+</div>
+<div class="form-group">
+<label for="año" >Año</label>
+<input id="año" name="año" type="number" value="{{ old('año', $unidad->año) }}" required>
+<x-input-error :messages="$errors->get('año')" />
 </div>
 <div class="form-group">
 <label for="placas" >Placas</label>
@@ -26,9 +31,19 @@
 <x-input-error :messages="$errors->get('placas')" />
 </div>
 <div class="form-group">
-<label for="numero_serie" >Número de Serie</label>
+<label for="numero_economico" >Número Económico</label>
+<input id="numero_economico" name="numero_economico" type="text" value="{{ old('numero_economico', $unidad->numero_economico) }}">
+<x-input-error :messages="$errors->get('numero_economico')" />
+</div>
+<div class="form-group">
+<label for="numero_serie" >Número de Serie (VIN)</label>
 <input id="numero_serie" name="numero_serie" type="text" value="{{ old('numero_serie', $unidad->numero_serie) }}">
 <x-input-error :messages="$errors->get('numero_serie')" />
+</div>
+<div class="form-group">
+<label for="estado_emplacado" >Estado Emplacado</label>
+<input id="estado_emplacado" name="estado_emplacado" type="text" value="{{ old('estado_emplacado', $unidad->estado_emplacado) }}">
+<x-input-error :messages="$errors->get('estado_emplacado')" />
 </div>
 <div class="form-group">
 <label for="seguro_vencimiento" >Vencimiento del Seguro</label>
@@ -36,10 +51,22 @@
 <x-input-error :messages="$errors->get('seguro_vencimiento')" />
 </div>
 <div class="form-group">
+<label for="oficina_id" >Oficina</label>
+<select id="oficina_id" name="oficina_id">
+<option value="">Seleccionar...</option>                        @foreach ($oficinas as $oficina)                            <option value="{{ $oficina->id }}" @selected(old('oficina_id', $unidad->oficina_id) == $oficina->id)>{{ $oficina->nombre }}</option>                        @endforeach                    </select>
+<x-input-error :messages="$errors->get('oficina_id')" />
+</div>
+<div class="form-group">
 <label for="operador_id" >Operador Asignado</label>
 <select id="operador_id" name="operador_id" >
 <option value="">Sin asignar</option>                        @foreach ($operadores as $op)                            <option value="{{ $op->id }}" @selected(old('operador_id', $unidad->operador_id) == $op->id)>{{ $op->empleado?->nombreCompleto() }}</option>                        @endforeach                    </select>
 <x-input-error :messages="$errors->get('operador_id')" />
+</div>
+<div class="form-group">
+<label class="flex items-center gap-2">
+<input type="checkbox" name="activo" value="1" @checked(old('activo', $unidad->activo)) class="rounded border-gray-300">
+<span class="text-sm font-medium text-gray-700">Unidad activa</span>
+</label>
 </div>
 <div class="flex items-center gap-3 pt-2">
 <button type="submit" class="btn btn-primary">Actualizar</button>

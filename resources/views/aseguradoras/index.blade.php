@@ -7,12 +7,14 @@
 <table>
 <thead>
 <tr>
+<th>#</th>
 <th>Nombre</th>
 <th>Teléfono</th>
 <th>Acciones</th>
 </tr>
 </thead>
 <tbody>                    @forelse ($aseguradoras as $a)                    <tr>
+<td class="text-gray-400 text-xs">{{ $a->id }}</td>
 <td>
 <strong>{{ $a->nombre }}</strong>
 </td>
@@ -26,7 +28,7 @@
 </div>
 </td>
 </tr>                    @empty                    <tr>
-<td colspan="3" class="text-center text-gray-500 py-8">No hay aseguradoras registradas.</td>
+<td colspan="4" class="text-center text-gray-500 py-8">No hay aseguradoras registradas.</td>
 </tr>                    @endforelse                </tbody>
 </table>
 </div>

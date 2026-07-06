@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Empresa;
 use App\Models\Servicio;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -17,6 +18,7 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        Carbon::setLocale('es');
         Gate::define('admin', fn($user) => $user->isAdmin());
         Gate::define('empleado', fn($user) => $user->isEmpleado());
         View::composer('*', function ($view) {
@@ -33,10 +35,12 @@ class AppServiceProvider extends ServiceProvider
 
             if ($user && $empresaId = session('empresa_id')) {
                 $query = Servicio::where('empresa_id', $empresaId)
-                    ->whereIn('estado', ['asignado', 'en_proceso']);
+                    ->whereIn('estado', Servicio::ESTADOS_ACTIVOS);
 
                 if ($user->isOperador()) {
                     $query->where('operador_id', $user->empleado?->operador?->id);
+                } elseif ($user->isCliente()) {
+                    $query->whereHas('cotizacion', fn($q) => $q->where('created_by', $user->id));
                 }
 
                 $serviciosActivos = $query->count();

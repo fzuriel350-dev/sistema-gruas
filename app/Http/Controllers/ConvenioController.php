@@ -42,6 +42,7 @@ class ConvenioController extends Controller
             'costo_banderazo' => 'required|numeric|min:0',
             'costo_km' => 'required|numeric|min:0',
             'km_incluidos' => 'required|numeric|min:0',
+            'cubre_casetas_peaje' => 'required|in:0,1',
             'descuento' => 'required|numeric|min:0|max:100',
             'cobertura' => 'required|string|max:255',
         ]);
@@ -80,6 +81,7 @@ class ConvenioController extends Controller
             'costo_banderazo' => 'required|numeric|min:0',
             'costo_km' => 'required|numeric|min:0',
             'km_incluidos' => 'required|numeric|min:0',
+            'cubre_casetas_peaje' => 'required|in:0,1',
             'descuento' => 'required|numeric|min:0|max:100',
             'cobertura' => 'required|string|max:255',
         ]);

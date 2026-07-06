@@ -52,9 +52,25 @@
 <span class="text-gray-500">Teléfono</span>
 <p class="font-semibold mt-0.5">{{ $empleado->telefono ?: '—' }}</p>
 </div>
+                <div>
+<span class="text-gray-500">ID</span>
+<p class="font-semibold mt-0.5">{{ $empleado->id }}</p>
+</div>
+<div>
+<span class="text-gray-500">Oficina</span>
+<p class="font-semibold mt-0.5">{{ $empleado->oficina?->nombre ?: '—' }}</p>
+</div>
 <div>
 <span class="text-gray-500">Dirección</span>
 <p class="font-semibold mt-0.5">{{ $empleado->direccion ?: '—' }}</p>
+</div>
+<div>
+<span class="text-gray-500">Puesto</span>
+<p class="font-semibold mt-0.5">{{ $empleado->puesto ?: '—' }}</p>
+</div>
+<div>
+<span class="text-gray-500">Sueldo diario</span>
+<p class="font-semibold mt-0.5">${{ number_format($empleado->sueldo_diario, 2) }}</p>
 </div>
 <div>
 <span class="text-gray-500">Email</span>
@@ -65,9 +81,19 @@
 <p class="font-semibold mt-0.5">{{ $empleado->usuario?->role ?: '—' }}</p>
 </div>
 <div>
-<span class="text-gray-500">Registrado</span>
-<p class="font-semibold mt-0.5">{{ $empleado->created_at->format('d/m/Y') }}</p>
+<span class="text-gray-500">Creado</span>
+<p class="font-semibold mt-0.5">{{ $empleado->created_at->format('d/m/Y H:i') }}</p>
 </div>
+<div>
+<span class="text-gray-500">Actualizado</span>
+<p class="font-semibold mt-0.5">{{ $empleado->updated_at->format('d/m/Y H:i') }}</p>
+</div>
+@if ($empleado->trashed())
+<div>
+<span class="text-gray-500">Eliminado</span>
+<p class="font-semibold mt-0.5 text-red-600">{{ $empleado->deleted_at->format('d/m/Y H:i') }}</p>
+</div>
+@endif
 </div>
 </div>
 </div>

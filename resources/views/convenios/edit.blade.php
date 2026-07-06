@@ -58,6 +58,14 @@
 <input id="cobertura" name="cobertura" type="text" value="{{ old('cobertura', $convenio->cobertura) }}" required>
 <x-input-error :messages="$errors->get('cobertura')" />
 </div>
+<div class="form-group">
+<label for="cubre_casetas_peaje">Cubre casetas/peaje</label>
+<select id="cubre_casetas_peaje" name="cubre_casetas_peaje">
+<option value="0" @selected(old('cubre_casetas_peaje', $convenio->cubre_casetas_peaje) == 0)>No</option>
+<option value="1" @selected(old('cubre_casetas_peaje', $convenio->cubre_casetas_peaje) == 1)>Sí</option>
+</select>
+<x-input-error :messages="$errors->get('cubre_casetas_peaje')" />
+</div>
 <div class="flex items-center gap-3 pt-2">
 <button type="submit" class="btn btn-primary">Actualizar</button>
 <a href="{{ route('convenios.index') }}" class="btn btn-ghost">Cancelar</a>

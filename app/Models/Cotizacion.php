@@ -17,38 +17,25 @@ class Cotizacion extends Model
         'aseguradora_id',
         'tipo_servicio_id',
         'folio',
-        'origen',
-        'destino',
+        'origen_direccion',
+        'destino_direccion',
+        'origen_lat',
+        'origen_lng',
+        'destino_lat',
+        'destino_lng',
         'distancia_km',
-        'tiempo_estimado',
-        'tipo_ruta',
+        'tiempo_estimado_minutos',
         'costo_banderazo',
         'costo_km',
         'km_excedente',
+        'incluye_peajes',
+        'costo_aprox_casetas',
         'costo_total',
-        'no_poliza',
-        'marca',
-        'modelo',
-        'color',
-        'placas',
-        'con_peaje',
-        'num_casetas',
-        'costo_casetas',
-        'costo_kilometraje',
-        'extras',
-        'subtotal',
-        'iva',
-        'cobertura',
-        'convenio_id',
-        'descuento_porcentaje',
-        'descuento_monto',
-        'notas',
-        'created_by',
+        'convenio_aplicado_id',
+        'usuario_creador_id',
         'estatus',
     ];
 
-    const TIPO_RUTA = ['local', 'foraneo'];
-    const COBERTURA = ['total', 'parcial', 'sin_cobertura'];
     const ESTATUS = ['pendiente', 'aprobado', 'rechazado'];
 
     public function empresa()
@@ -73,12 +60,12 @@ class Cotizacion extends Model
 
     public function creador()
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(User::class, 'usuario_creador_id');
     }
 
     public function convenio()
     {
-        return $this->belongsTo(Convenio::class);
+        return $this->belongsTo(Convenio::class, 'convenio_aplicado_id');
     }
 
     public function servicios()

@@ -16,9 +16,19 @@
 <x-input-error :messages="$errors->get('licencia_tipo')" />
 </div>
 <div class="form-group">
-<label for="licencia_año_vencimiento" >Año de Vencimiento</label>
+<label for="licencia_año_vencimiento" >Vencimiento licencia (estatal)</label>
                     <input id="licencia_año_vencimiento" name="licencia_año_vencimiento" type="date" value="{{ old('licencia_año_vencimiento', $operador->licencia_año_vencimiento?->format('Y-m-d')) }}" required>
 <x-input-error :messages="$errors->get('licencia_año_vencimiento')" />
+</div>
+<div class="form-group">
+<label for="licencia_vencimiento_federal" >Vencimiento licencia (federal)</label>
+<input id="licencia_vencimiento_federal" name="licencia_vencimiento_federal" type="date" value="{{ old('licencia_vencimiento_federal', $operador->licencia_vencimiento_federal?->format('Y-m-d')) }}">
+<x-input-error :messages="$errors->get('licencia_vencimiento_federal')" />
+</div>
+<div class="form-group">
+<label for="puntos_acumulados" >Puntos acumulados</label>
+<input id="puntos_acumulados" name="puntos_acumulados" type="number" min="0" value="{{ old('puntos_acumulados', $operador->puntos_acumulados) }}">
+<x-input-error :messages="$errors->get('puntos_acumulados')" />
 </div>
 <div class="form-group">
 <label class="flex items-center gap-2">

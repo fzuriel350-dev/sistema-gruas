@@ -81,4 +81,19 @@ class User extends Authenticatable
     {
         return $this->hasMany(Notificacion::class, 'usuario_id');
     }
+
+    public function cliente()
+    {
+        return $this->hasOne(Cliente::class, 'usuario_id');
+    }
+
+    public function solicitudesCancelacion()
+    {
+        return $this->hasMany(AutorizacionCancelacion::class, 'usuario_solicitante_id');
+    }
+
+    public function resolucionesCancelacion()
+    {
+        return $this->hasMany(AutorizacionCancelacion::class, 'usuario_resolutor_id');
+    }
 }

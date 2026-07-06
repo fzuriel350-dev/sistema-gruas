@@ -35,7 +35,9 @@ class OperadorController extends Controller
             'empleado_id' => 'required|exists:empleados,id',
             'licencia_tipo' => 'required|string|max:50',
             'licencia_año_vencimiento' => 'required|date',
+            'licencia_vencimiento_federal' => 'nullable|date',
             'disponible' => 'boolean',
+            'puntos_acumulados' => 'nullable|integer|min:0',
         ]);
         $data['empresa_id'] = session('empresa_id');
         $data['disponible'] = $request->boolean('disponible');
@@ -69,7 +71,9 @@ class OperadorController extends Controller
             'empleado_id' => 'required|exists:empleados,id',
             'licencia_tipo' => 'required|string|max:50',
             'licencia_año_vencimiento' => 'required|date',
+            'licencia_vencimiento_federal' => 'nullable|date',
             'disponible' => 'boolean',
+            'puntos_acumulados' => 'nullable|integer|min:0',
         ]);
         $data['disponible'] = $request->boolean('disponible');
         $operador->update($data);

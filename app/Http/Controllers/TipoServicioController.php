@@ -18,13 +18,13 @@ class TipoServicioController extends Controller
 
     public function create()
     {
-        $this->authorize('empleado');
+        $this->authorize('admin');
         return view('tipos_servicio.create');
     }
 
     public function store(Request $request)
     {
-        $this->authorize('empleado');
+        $this->authorize('admin');
         $data = $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'nullable|string',
@@ -43,13 +43,13 @@ class TipoServicioController extends Controller
 
     public function edit(TipoServicio $tiposServicio)
     {
-        $this->authorize('empleado');
+        $this->authorize('admin');
         return view('tipos_servicio.edit', compact('tiposServicio'));
     }
 
     public function update(Request $request, TipoServicio $tiposServicio)
     {
-        $this->authorize('empleado');
+        $this->authorize('admin');
         $data = $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'nullable|string',
@@ -60,7 +60,7 @@ class TipoServicioController extends Controller
 
     public function destroy(TipoServicio $tiposServicio)
     {
-        $this->authorize('empleado');
+        $this->authorize('admin');
         $tiposServicio->delete();
         return redirect()->route('tipos-servicio.index')->with('success', 'Tipo de servicio eliminado.');
     }

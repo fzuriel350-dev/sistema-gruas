@@ -78,6 +78,10 @@
 <div class="card-body">
 <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
                     <div>
+<span class="text-gray-500">ID</span>
+<p class="font-semibold mt-0.5">{{ $cliente->id }}</p>
+</div>
+<div>
 <span class="text-gray-500">Nombre</span>
 <p class="font-semibold mt-0.5">{{ $cliente->nombre }}</p>
 </div>
@@ -90,6 +94,18 @@
 <p class="font-semibold mt-0.5">{{ $cliente->telefono ?? '—' }}</p>
 </div>
 <div>
+<span class="text-gray-500">Email</span>
+<p class="font-semibold mt-0.5">{{ $cliente->email ?? '—' }}</p>
+</div>
+<div>
+<span class="text-gray-500">Aseguradora</span>
+<p class="font-semibold mt-0.5">{{ $cliente->aseguradora?->nombre ?? '—' }}</p>
+</div>
+<div>
+<span class="text-gray-500">Póliza / Cobertura</span>
+<p class="font-semibold mt-0.5">{{ $cliente->numero_poliza ? $cliente->numero_poliza . ' — ' . ($cliente->tipo_cobertura_poliza ?? '') : '—' }}</p>
+</div>
+<div>
 <span class="text-gray-500">Contacto</span>
 <p class="font-semibold mt-0.5">{{ $cliente->contacto ?? '—' }}</p>
 </div>
@@ -98,9 +114,19 @@
 <p class="font-semibold mt-0.5">{{ $cliente->direccion ?? '—' }}</p>
 </div>
 <div>
-<span class="text-gray-500">Registrado</span>
-<p class="font-semibold mt-0.5">{{ $cliente->created_at->format('d/m/Y') }}</p>
+<span class="text-gray-500">Creado</span>
+<p class="font-semibold mt-0.5">{{ $cliente->created_at->format('d/m/Y H:i') }}</p>
 </div>
+<div>
+<span class="text-gray-500">Actualizado</span>
+<p class="font-semibold mt-0.5">{{ $cliente->updated_at->format('d/m/Y H:i') }}</p>
+</div>
+@if ($cliente->trashed())
+<div>
+<span class="text-gray-500">Eliminado</span>
+<p class="font-semibold mt-0.5 text-red-600">{{ $cliente->deleted_at->format('d/m/Y H:i') }}</p>
+</div>
+@endif
 </div>
 </div>
 </div>

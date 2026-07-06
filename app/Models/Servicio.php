@@ -6,18 +6,26 @@ use Illuminate\Database\Eloquent\Model;
 
 class Servicio extends Model
 {
-    use \App\Models\Traits\BelongsToEmpresa;
+    use Traits\BelongsToEmpresa;
 
     protected $fillable = [
         'empresa_id',
         'cotizacion_id',
         'operador_id',
         'unidad_id',
+        'oficina_id',
         'tipo_servicio_id',
         'descripcion',
         'estado',
         'fecha_inicio',
         'fecha_fin',
+        'kms_salida',
+        'kms_llegada_cliente',
+        'kms_termino_servicio',
+        'kms_regreso_base',
+        'kms_cobrados_reales',
+        'costo_final_real',
+        'observaciones',
     ];
 
     protected function casts(): array
@@ -28,7 +36,8 @@ class Servicio extends Model
         ];
     }
 
-    const ESTADOS = ['asignado', 'en_proceso', 'finalizado', 'cancelado'];
+    const ESTADOS = ['asignado', 'inicio_servicio', 'en_sitio_origen', 'en_carga', 'en_transito', 'en_sitio_destino', 'finalizado', 'cancelado'];
+    const ESTADOS_ACTIVOS = ['asignado', 'inicio_servicio', 'en_sitio_origen', 'en_carga', 'en_transito', 'en_sitio_destino'];
 
     public function empresa()
     {
@@ -53,5 +62,25 @@ class Servicio extends Model
     public function tipoServicio()
     {
         return $this->belongsTo(TipoServicio::class);
+    }
+
+    public function oficina()
+    {
+        return $this->belongsTo(Oficina::class);
+    }
+
+    public function bitacoraTiempos()
+    {
+        return $this->hasOne(BitacoraTiempoServicio::class, 'servicio_id');
+    }
+
+    public function autorizacionesCancelacion()
+    {
+        return $this->hasMany(AutorizacionCancelacion::class, 'servicio_id');
+    }
+
+    public function factura()
+    {
+        return $this->hasOne(Factura::class, 'servicio_id');
     }
 }

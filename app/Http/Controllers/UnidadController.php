@@ -12,7 +12,7 @@ class UnidadController extends Controller
     {
         $this->authorize('empleado');
         $unidades = Unidad::where('empresa_id', session('empresa_id'))
-            ->with('operador.empleado')
+            ->with('operador.empleado', 'oficina')
             ->orderBy('marca')
             ->paginate(15);
         return view('unidades.index', compact('unidades'));
@@ -25,7 +25,10 @@ class UnidadController extends Controller
             ->with('empleado')
             ->orderBy('id')
             ->get();
-        return view('unidades.create', compact('operadores'));
+        $oficinas = \App\Models\Oficina::where('empresa_id', session('empresa_id'))
+            ->orderBy('nombre')
+            ->get();
+        return view('unidades.create', compact('operadores', 'oficinas'));
     }
 
     public function store(Request $request)
@@ -34,13 +37,19 @@ class UnidadController extends Controller
         $data = $request->validate([
             'marca' => 'required|string|max:255',
             'tipo' => 'required|string|max:100',
-            'ano' => 'required|integer|min:1990|max:' . (date('Y') + 1),
+            'año' => 'required|integer|min:1990|max:' . (date('Y') + 1),
+            'modelo' => 'nullable|string|max:100',
             'placas' => 'required|string|max:20',
+            'numero_economico' => 'nullable|string|max:50',
             'numero_serie' => 'nullable|string|max:100',
+            'estado_emplacado' => 'nullable|string|max:100',
             'seguro_vencimiento' => 'nullable|date',
+            'oficina_id' => 'nullable|exists:oficinas,id',
             'operador_id' => 'nullable|exists:operadores,id',
+            'activo' => 'boolean',
         ]);
         $data['empresa_id'] = session('empresa_id');
+        $data['activo'] = $request->boolean('activo');
         Unidad::create($data);
         return redirect()->route('unidades.index')->with('success', 'Unidad registrada correctamente.');
     }
@@ -48,7 +57,7 @@ class UnidadController extends Controller
     public function show(Unidad $unidad)
     {
         $this->authorize('empleado');
-        $unidad->load('operador.empleado');
+        $unidad->load('operador.empleado', 'oficina');
         return view('unidades.show', compact('unidad'));
     }
 
@@ -59,7 +68,10 @@ class UnidadController extends Controller
             ->with('empleado')
             ->orderBy('id')
             ->get();
-        return view('unidades.edit', compact('unidad', 'operadores'));
+        $oficinas = \App\Models\Oficina::where('empresa_id', session('empresa_id'))
+            ->orderBy('nombre')
+            ->get();
+        return view('unidades.edit', compact('unidad', 'operadores', 'oficinas'));
     }
 
     public function update(Request $request, Unidad $unidad)
@@ -68,12 +80,18 @@ class UnidadController extends Controller
         $data = $request->validate([
             'marca' => 'required|string|max:255',
             'tipo' => 'required|string|max:100',
-            'ano' => 'required|integer|min:1990|max:' . (date('Y') + 1),
+            'año' => 'required|integer|min:1990|max:' . (date('Y') + 1),
+            'modelo' => 'nullable|string|max:100',
             'placas' => 'required|string|max:20',
+            'numero_economico' => 'nullable|string|max:50',
             'numero_serie' => 'nullable|string|max:100',
+            'estado_emplacado' => 'nullable|string|max:100',
             'seguro_vencimiento' => 'nullable|date',
+            'oficina_id' => 'nullable|exists:oficinas,id',
             'operador_id' => 'nullable|exists:operadores,id',
+            'activo' => 'boolean',
         ]);
+        $data['activo'] = $request->boolean('activo');
         $unidad->update($data);
         return redirect()->route('unidades.index')->with('success', 'Unidad actualizada correctamente.');
     }

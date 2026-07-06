@@ -13,9 +13,13 @@
 <table>
 <thead>
                     <tr>
+<th>#</th>
 <th>Nombre</th>
 <th>Empresa</th>
 <th>Teléfono</th>
+<th>Email</th>
+<th>Aseguradora</th>
+<th>Póliza</th>
 <th>Contacto</th>
 <th>Dirección</th>
 <th>Cotizaciones</th>
@@ -24,11 +28,15 @@
 </tr>
 </thead>
 <tbody>                    @forelse ($clientes as $c)                    <tr>
+<td class="text-gray-400 text-xs">{{ $c->id }}</td>
 <td>
 <strong>{{ $c->nombre }}</strong>
 </td>
 <td>{{ $c->empresa ?? '—' }}</td>
 <td>{{ $c->telefono ?? '—' }}</td>
+<td>{{ $c->email ?? '—' }}</td>
+<td>{{ $c->aseguradora?->nombre ?? '—' }}</td>
+<td class="text-xs">{{ $c->numero_poliza ? $c->numero_poliza . ' — ' . ($c->tipo_cobertura_poliza ?? '') : '—' }}</td>
 <td>{{ $c->contacto ?? '—' }}</td>
 <td class="max-w-[160px] truncate">{{ $c->direccion ?? '—' }}</td>
 <td>{{ $c->servicios_count }}</td>
@@ -42,7 +50,7 @@
 </div>
 </td>
 </tr>                    @empty                    <tr>
-<td colspan="8" class="text-center text-gray-500 py-8">No hay clientes registrados.</td>
+<td colspan="12" class="text-center text-gray-500 py-8">No hay clientes registrados.</td>
 </tr>                    @endforelse                </tbody>
 </table>
 </div>

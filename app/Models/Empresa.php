@@ -85,6 +85,26 @@ class Empresa extends Model
         return $this->hasMany(ServicioConfigurado::class);
     }
 
+    public function oficinas()
+    {
+        return $this->hasMany(Oficina::class);
+    }
+
+    public function cargasDiesel()
+    {
+        return $this->hasMany(CargaDiesel::class);
+    }
+
+    public function facturas()
+    {
+        return $this->hasMany(Factura::class);
+    }
+
+    public function controlNomina()
+    {
+        return $this->hasMany(ControlNomina::class);
+    }
+
     public function cotizaciones()
     {
         return $this->hasMany(Cotizacion::class);

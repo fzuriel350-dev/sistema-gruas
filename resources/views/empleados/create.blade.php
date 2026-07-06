@@ -31,6 +31,26 @@
 <x-input-error :messages="$errors->get('direccion')" />
 </div>
 <div class="form-group">
+<label for="oficina_id" >Oficina</label>
+<select id="oficina_id" name="oficina_id">
+<option value="">Seleccionar...</option>
+@foreach ($oficinas as $oficina)
+<option value="{{ $oficina->id }}" @selected(old('oficina_id') == $oficina->id)>{{ $oficina->nombre }}</option>
+@endforeach
+</select>
+<x-input-error :messages="$errors->get('oficina_id')" />
+</div>
+<div class="form-group">
+<label for="puesto" >Puesto</label>
+<input id="puesto" name="puesto" type="text" value="{{ old('puesto') }}">
+<x-input-error :messages="$errors->get('puesto')" />
+</div>
+<div class="form-group">
+<label for="sueldo_diario" >Sueldo diario</label>
+<input id="sueldo_diario" name="sueldo_diario" type="number" step="0.01" min="0" value="{{ old('sueldo_diario') }}">
+<x-input-error :messages="$errors->get('sueldo_diario')" />
+</div>
+<div class="form-group">
 <label for="role" >Rol</label>
 <select id="role" name="role" required>
 <option value="">Seleccionar...</option>

@@ -52,7 +52,7 @@ class DashboardController extends Controller
 
         $stats = [
             'cotizaciones_pendientes' => Cotizacion::where('empresa_id', $empresaId)->where('estatus', 'pendiente')->count(),
-            'servicios_activos' => Servicio::where('empresa_id', $empresaId)->whereIn('estado', ['asignado', 'en_proceso'])->count(),
+            'servicios_activos' => Servicio::where('empresa_id', $empresaId)->whereIn('estado', Servicio::ESTADOS_ACTIVOS)->count(),
             'operadores_disponibles' => Operador::where('empresa_id', $empresaId)->where('disponible', true)->count(),
             'operadores_ocupados' => Operador::where('empresa_id', $empresaId)->where('disponible', false)->count(),
             'ingresos_mes' => Cotizacion::where('empresa_id', $empresaId)
@@ -105,11 +105,11 @@ class DashboardController extends Controller
             ->map(fn($s) => [
                 'folio' => $s->cotizacion?->folio ?? 'SVC-' . $s->id,
                 'cliente' => $s->cotizacion?->cliente?->nombre ?? '—',
-                'origen' => $s->cotizacion?->origen ?? '—',
-                'destino' => $s->cotizacion?->destino ?? '—',
+                'origen' => $s->cotizacion?->origen_direccion ?? '—',
+                'destino' => $s->cotizacion?->destino_direccion ?? '—',
                 'estado' => str_replace('_', ' ', ucfirst($s->estado)),
                 'class' => match($s->estado) {
-                    'en_proceso' => 'active',
+                    'inicio_servicio', 'en_sitio_origen', 'en_carga', 'en_transito', 'en_sitio_destino' => 'active',
                     'finalizado' => 'success',
                     'cancelado' => 'danger',
                     default => 'pending',

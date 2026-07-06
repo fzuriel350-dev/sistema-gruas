@@ -7,12 +7,14 @@
 <table>
 <thead>
 <tr>
-<th>Nombre</th>
-<th>Descripción</th>
-<th>Acciones</th>
-</tr>
+                        <th>#</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Acciones</th>
+                    </tr>
 </thead>
 <tbody>                    @forelse ($tipos as $t)                    <tr>
+<td class="text-gray-400 text-xs">{{ $t->id }}</td>
 <td>
 <strong>{{ $t->nombre }}</strong>
 </td>
@@ -26,7 +28,7 @@
 </div>
 </td>
 </tr>                    @empty                    <tr>
-<td colspan="3" class="text-center text-gray-500 py-8">No hay tipos de servicio registrados.</td>
+<td colspan="4" class="text-center text-gray-500 py-8">No hay tipos de servicio registrados.</td>
 </tr>                    @endforelse                </tbody>
 </table>
 </div>

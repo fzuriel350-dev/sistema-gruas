@@ -33,10 +33,14 @@
 <span class="text-gray-500">Descripción</span>
 <p class="font-semibold mt-0.5">{{ $tiposServicio->descripcion ?? '—' }}</p>
 </div>
-<div>
-<span class="text-gray-500">Registrado</span>
-<p class="font-semibold mt-0.5">{{ $tiposServicio->created_at->format('d/m/Y') }}</p>
-</div>
+                <div>
+                    <span class="text-gray-500">Registrado</span>
+                    <p class="font-semibold mt-0.5">{{ $tiposServicio->created_at->format('d/m/Y') }}</p>
+                </div>
+                <div>
+                    <span class="text-gray-500">Actualizado</span>
+                    <p class="font-semibold mt-0.5">{{ $tiposServicio->updated_at->format('d/m/Y H:i') }}</p>
+                </div>
 </div>
 </div>
 </div>

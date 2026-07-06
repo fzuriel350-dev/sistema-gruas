@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Aseguradora extends Model
 {
-    use \App\Models\Traits\BelongsToEmpresa;
+    use SoftDeletes, Traits\BelongsToEmpresa;
 
     protected $fillable = [
         'empresa_id',

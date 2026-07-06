@@ -14,6 +14,7 @@ class Notificacion extends Model
         'empresa_id',
         'usuario_id',
         'mensaje',
+        'canal',
         'tipo',
         'estado',
     ];

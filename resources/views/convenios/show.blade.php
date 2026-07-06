@@ -43,6 +43,18 @@
 <p class="text-xs text-gray-500 uppercase font-semibold">Cobertura</p>
 <p class="font-medium">{{ $convenio->cobertura }}</p>
 </div>
+<div>
+<p class="text-xs text-gray-500 uppercase font-semibold">Cubre casetas/peaje</p>
+<p class="font-medium {{ $convenio->cubre_casetas_peaje ? 'text-emerald-600' : 'text-red-500' }}">{{ $convenio->cubre_casetas_peaje ? 'Sí' : 'No' }}</p>
+</div>
+<div>
+<p class="text-xs text-gray-500 uppercase font-semibold">Creado</p>
+<p class="font-medium">{{ $convenio->created_at->format('d/m/Y H:i') }}</p>
+</div>
+<div>
+<p class="text-xs text-gray-500 uppercase font-semibold">Actualizado</p>
+<p class="font-medium">{{ $convenio->updated_at->format('d/m/Y H:i') }}</p>
+</div>
 </div>
 </div>
 </div>

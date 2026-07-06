@@ -2,14 +2,22 @@
 
 use App\Http\Controllers\AseguradoraController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\ClientePanelController;
 use App\Http\Controllers\ConfiguracionController;
+use App\Http\Controllers\ControlNominaController;
 use App\Http\Controllers\ConvenioController;
 use App\Http\Controllers\CotizacionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\NotificacionController;
+use App\Http\Controllers\OficinaController;
+use App\Http\Controllers\CargaDieselController;
+use App\Http\Controllers\BitacoraTiempoServicioController;
+use App\Http\Controllers\AutorizacionCancelacionController;
+use App\Http\Controllers\FacturaController;
 use App\Http\Controllers\OperadorController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ServicioConfiguradoController;
 use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\TipoServicioController;
 use App\Http\Controllers\UnidadController;
@@ -36,6 +44,13 @@ Route::middleware('auth')->group(function () {
     Route::resource('empleados', EmpleadoController::class);
     Route::resource('operadores', OperadorController::class);
     Route::resource('unidades', UnidadController::class);
+    Route::resource('oficinas', OficinaController::class);
+    Route::resource('cargas-diesel', CargaDieselController::class);
+    Route::resource('bitacora-tiempos', BitacoraTiempoServicioController::class);
+    Route::resource('autorizaciones-cancelacion', AutorizacionCancelacionController::class);
+    Route::resource('facturas', FacturaController::class);
+    Route::resource('control-nomina', ControlNominaController::class);
+    Route::resource('servicios-configurados', ServicioConfiguradoController::class);
     Route::resource('convenios', ConvenioController::class);
     Route::resource('servicios', ServicioController::class);
 
@@ -45,6 +60,21 @@ Route::middleware('auth')->group(function () {
 
     Route::get('configuracion', [ConfiguracionController::class, 'index'])->name('configuracion.index');
     Route::put('configuracion', [ConfiguracionController::class, 'update'])->name('configuracion.update');
+
+        Route::prefix('panel')->name('clientes.')->group(function () {
+        Route::get('/', [ClientePanelController::class, 'dashboard'])->name('dashboard');
+        Route::get('/servicios', [ClientePanelController::class, 'servicios'])->name('servicios');
+        Route::get('/servicios/{servicio}', [ClientePanelController::class, 'servicioShow'])->name('servicio-show');
+        Route::post('/servicios/{servicio}/cancelar', [ClientePanelController::class, 'cancelarServicio'])->name('servicios.cancelar');
+        Route::get('/cotizaciones', [ClientePanelController::class, 'cotizaciones'])->name('cotizaciones');
+        Route::post('/cotizaciones/{cotizacione}/aprobar', [ClientePanelController::class, 'aprobarCotizacion'])->name('cotizaciones.aprobar');
+        Route::post('/cotizaciones/{cotizacione}/rechazar', [ClientePanelController::class, 'rechazarCotizacion'])->name('cotizaciones.rechazar');
+        Route::get('/notificaciones', [ClientePanelController::class, 'notificaciones'])->name('notificaciones');
+        Route::post('/notificaciones/{notificacione}/leer', [ClientePanelController::class, 'notificacionLeer'])->name('notificaciones.leer');
+        Route::post('/notificaciones/leer-todas', [ClientePanelController::class, 'notificacionesLeerTodas'])->name('notificaciones.leer-todas');
+        Route::get('/perfil', [ClientePanelController::class, 'perfil'])->name('perfil');
+        Route::post('/perfil', [ClientePanelController::class, 'updatePerfil'])->name('perfil.update');
+    });
 });
 
 require __DIR__.'/auth.php';

@@ -21,6 +21,27 @@
 <x-input-error :messages="$errors->get('telefono')" />
 </div>
 <div class="form-group">
+<label for="email">Email</label>
+<input id="email" name="email" type="email" value="{{ old('email', $cliente->email) }}">
+<x-input-error :messages="$errors->get('email')" />
+</div>
+<div class="form-group">
+<label for="aseguradora_id">Aseguradora</label>
+<select id="aseguradora_id" name="aseguradora_id">
+<option value="">Seleccionar...</option>                        @foreach ($aseguradoras as $a)                            <option value="{{ $a->id }}" @selected(old('aseguradora_id', $cliente->aseguradora_id) == $a->id)>{{ $a->nombre }}</option>                        @endforeach                    </select>
+<x-input-error :messages="$errors->get('aseguradora_id')" />
+</div>
+<div class="form-group">
+<label for="numero_poliza">Número de Póliza</label>
+<input id="numero_poliza" name="numero_poliza" type="text" value="{{ old('numero_poliza', $cliente->numero_poliza) }}">
+<x-input-error :messages="$errors->get('numero_poliza')" />
+</div>
+<div class="form-group">
+<label for="tipo_cobertura_poliza">Tipo de Cobertura</label>
+<input id="tipo_cobertura_poliza" name="tipo_cobertura_poliza" type="text" value="{{ old('tipo_cobertura_poliza', $cliente->tipo_cobertura_poliza) }}">
+<x-input-error :messages="$errors->get('tipo_cobertura_poliza')" />
+</div>
+<div class="form-group">
 <label for="contacto">Contacto</label>
 <input id="contacto" name="contacto" type="text" value="{{ old('contacto', $cliente->contacto) }}">
 <x-input-error :messages="$errors->get('contacto')" />

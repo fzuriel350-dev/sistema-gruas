@@ -45,17 +45,35 @@
 <p class="font-semibold mt-0.5">{{ $operador->licencia_tipo }}</p>
 </div>
 <div>
-<span class="text-gray-500">Vencimiento de licencia</span>
+<span class="text-gray-500">Vencimiento licencia (estatal)</span>
 <p class="font-semibold mt-0.5">{{ $operador->licencia_año_vencimiento?->format('d/m/Y') ?: '—' }}</p>
+</div>
+<div>
+<span class="text-gray-500">Vencimiento licencia (federal)</span>
+<p class="font-semibold mt-0.5">{{ $operador->licencia_vencimiento_federal?->format('d/m/Y') ?: '—' }}</p>
+</div>
+<div>
+<span class="text-gray-500">Puntos acumulados</span>
+<p class="font-semibold mt-0.5">{{ $operador->puntos_acumulados ?? 0 }}</p>
 </div>
 <div>
 <span class="text-gray-500">Disponible</span>
 <p class="font-semibold mt-0.5">{{ $operador->disponible ? 'Sí' : 'No' }}</p>
 </div>
 <div>
-<span class="text-gray-500">Registrado</span>
-<p class="font-semibold mt-0.5">{{ $operador->created_at->format('d/m/Y') }}</p>
+<span class="text-gray-500">Creado</span>
+<p class="font-semibold mt-0.5">{{ $operador->created_at->format('d/m/Y H:i') }}</p>
 </div>
+<div>
+<span class="text-gray-500">Actualizado</span>
+<p class="font-semibold mt-0.5">{{ $operador->updated_at->format('d/m/Y H:i') }}</p>
+</div>
+@if ($operador->trashed())
+<div>
+<span class="text-gray-500">Eliminado</span>
+<p class="font-semibold mt-0.5 text-red-600">{{ $operador->deleted_at->format('d/m/Y H:i') }}</p>
+</div>
+@endif
 </div>
 </div>
 </div>

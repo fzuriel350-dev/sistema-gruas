@@ -15,7 +15,7 @@ return new class extends Migration
             $table->foreignId('operador_id')->constrained('operadores');
             $table->foreignId('unidad_id')->constrained('unidades');
             $table->string('tipo'); // local, foraneo
-            $table->string('estado'); // asignado, en_proceso, finalizado, cancelado
+            $table->string('estado')->default('asignado');
             $table->dateTime('fecha_inicio')->nullable();
             $table->dateTime('fecha_fin')->nullable();
             $table->timestamps();

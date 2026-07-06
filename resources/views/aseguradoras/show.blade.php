@@ -33,6 +33,10 @@
 <div class="card-body">
 <div class="grid grid-cols-2 gap-4 text-sm">
 <div>
+<span class="text-gray-500">ID</span>
+<p class="font-semibold mt-0.5">{{ $aseguradora->id }}</p>
+</div>
+<div>
 <span class="text-gray-500">Nombre</span>
 <p class="font-semibold mt-0.5">{{ $aseguradora->nombre }}</p>
 </div>
@@ -41,9 +45,19 @@
 <p class="font-semibold mt-0.5">{{ $aseguradora->telefono ?? '—' }}</p>
 </div>
 <div>
-<span class="text-gray-500">Registrado</span>
-<p class="font-semibold mt-0.5">{{ $aseguradora->created_at->format('d/m/Y') }}</p>
+<span class="text-gray-500">Creado</span>
+<p class="font-semibold mt-0.5">{{ $aseguradora->created_at->format('d/m/Y H:i') }}</p>
 </div>
+<div>
+<span class="text-gray-500">Actualizado</span>
+<p class="font-semibold mt-0.5">{{ $aseguradora->updated_at->format('d/m/Y H:i') }}</p>
+</div>
+@if ($aseguradora->trashed())
+<div>
+<span class="text-gray-500">Eliminado</span>
+<p class="font-semibold mt-0.5 text-red-600">{{ $aseguradora->deleted_at->format('d/m/Y H:i') }}</p>
+</div>
+@endif
 </div>
 </div>
 </div>

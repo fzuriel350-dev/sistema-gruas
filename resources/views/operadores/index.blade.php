@@ -7,20 +7,26 @@
 <table>
 <thead>
 <tr>
+<th>#</th>
 <th>Nombre</th>
 <th>Licencia</th>
-<th>Vencimiento</th>
+<th>Vencimiento (Estatal)</th>
+<th>Vencimiento (Federal)</th>
+<th>Puntos</th>
 <th>Unidades</th>
 <th>Disponible</th>
 <th>Acciones</th>
 </tr>
 </thead>
 <tbody>                    @forelse ($operadores as $o)                    <tr>
+<td class="text-gray-400 text-xs">{{ $o->id }}</td>
 <td>
 <strong>{{ $o->empleado?->nombreCompleto() }}</strong>
 </td>
 <td>{{ $o->licencia_tipo }}</td>
 <td>{{ $o->licencia_año_vencimiento?->format('d/m/Y') ?: '—' }}</td>
+<td>{{ $o->licencia_vencimiento_federal?->format('d/m/Y') ?: '—' }}</td>
+<td>{{ $o->puntos_acumulados ?? 0 }}</td>
 <td>{{ $o->unidades->count() }}</td>
 <td>                            @if ($o->disponible)                                <span class="status status-success">
 <span class="status-dot">
@@ -36,7 +42,7 @@
 </div>
 </td>
 </tr>                    @empty                    <tr>
-<td colspan="6" class="text-center text-gray-500 py-8">No hay operadores registrados.</td>
+<td colspan="9" class="text-center text-gray-500 py-8">No hay operadores registrados.</td>
 </tr>                    @endforelse                </tbody>
 </table>
 </div>

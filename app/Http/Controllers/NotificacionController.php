@@ -7,16 +7,32 @@ use Illuminate\Http\Request;
 
 class NotificacionController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
-        $notificaciones = Notificacion::where('empresa_id', session('empresa_id'))
+
+        $query = Notificacion::where('empresa_id', session('empresa_id'))
             ->where(function ($q) use ($user) {
                 $q->where('usuario_id', $user->id)->orWhereNull('usuario_id');
-            })
-            ->orderBy('created_at', 'desc')
-            ->paginate(15);
-        return view('notificaciones.index', compact('notificaciones'));
+            });
+
+        if ($request->filled('tipo')) {
+            $query->where('tipo', $request->tipo);
+        }
+
+        if ($request->filled('estado')) {
+            $query->where('estado', $request->estado);
+        }
+
+        $tipos = Notificacion::where('empresa_id', session('empresa_id'))
+            ->select('tipo')
+            ->distinct()
+            ->orderBy('tipo')
+            ->pluck('tipo');
+
+        $notificaciones = $query->orderBy('created_at', 'desc')->paginate(15);
+
+        return view('notificaciones.index', compact('notificaciones', 'tipos'));
     }
 
     public function marcarLeida(Notificacion $notificacione)

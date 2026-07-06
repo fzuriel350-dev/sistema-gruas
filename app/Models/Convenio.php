@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Convenio extends Model
 {
-    use HasFactory, \App\Models\Traits\BelongsToEmpresa;
+    use HasFactory, SoftDeletes, Traits\BelongsToEmpresa;
 
     protected $fillable = [
         'empresa_id',
@@ -18,6 +19,7 @@ class Convenio extends Model
         'costo_banderazo',
         'costo_km',
         'km_incluidos',
+        'cubre_casetas_peaje',
         'descuento',
         'cobertura',
     ];

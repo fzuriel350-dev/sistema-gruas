@@ -7,24 +7,34 @@
 <table>
 <thead>
 <tr>
+<th>#</th>
 <th>Nombre</th>
 <th>Teléfono</th>
 <th>Email</th>
+<th>Oficina</th>
+<th>Puesto</th>
+<th>Dirección</th>
 <th>Rol</th>
+<th>Sueldo Diario</th>
 <th>Acciones</th>
 </tr>
 </thead>
 <tbody>                    @forelse ($empleados as $e)                    <tr>
+<td class="text-gray-400 text-xs">{{ $e->id }}</td>
 <td>
 <strong>{{ $e->nombreCompleto() }}</strong>
 </td>
 <td>{{ $e->telefono ?: '—' }}</td>
 <td>{{ $e->usuario?->email ?: '—' }}</td>
+<td>{{ $e->oficina?->nombre ?: '—' }}</td>
+<td>{{ $e->puesto ?: '—' }}</td>
+<td class="max-w-[200px] truncate text-sm">{{ $e->direccion ?: '—' }}</td>
 <td>
 <span class="status status-pending">
 <span class="status-dot">
 </span> {{ $e->usuario?->role ?: '—' }}</span>
 </td>
+<td>${{ number_format($e->sueldo_diario, 2) }}</td>
 <td>
 <div class="flex items-center gap-2">
 <a href="{{ route('empleados.show', $e) }}" class="btn btn-sm btn-ghost">Ver</a>
@@ -34,7 +44,7 @@
 </div>
 </td>
 </tr>                    @empty                    <tr>
-<td colspan="5" class="text-center text-gray-500 py-8">No hay empleados registrados.</td>
+<td colspan="10" class="text-center text-gray-500 py-8">No hay empleados registrados.</td>
 </tr>                    @endforelse                </tbody>
 </table>
 </div>

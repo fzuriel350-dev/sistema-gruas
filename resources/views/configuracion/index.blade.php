@@ -77,9 +77,10 @@
                     </div>
                     <div class="form-group">
                         <label class="flex items-center gap-2 pt-5">
-                            <input type="checkbox" name="modo_oscuro" value="1" @checked(old('modo_oscuro', $empresa->modo_oscuro))>
+                            <input type="checkbox" name="modo_oscuro" id="modo_oscuro" value="1" @checked(old('modo_oscuro', $empresa->modo_oscuro))>
                             <span class="text-sm font-medium">Modo oscuro predeterminado</span>
                         </label>
+                        <p class="text-xs text-gray-500 mt-1">Se mostrará una confirmación antes de aplicar el cambio.</p>
                     </div>
                 </div>
             </div>
@@ -190,4 +191,32 @@
         </div>
     </form>
 </div>
+
+@push('scripts')
+<script>
+    document.getElementById('modo_oscuro').addEventListener('change', function (e) {
+        const checkbox = this;
+        const esOscuro = checkbox.checked;
+
+        Swal.fire({
+            title: esOscuro ? 'Modo oscuro' : 'Modo claro',
+            html: `<div style="text-align:center;padding:8px 0">
+                <div style="font-size:48px;margin-bottom:12px">${esOscuro ? '🌙' : '☀️'}</div>
+                <p style="color:#64748b;font-size:14px">${esOscuro
+                    ? '¿Cambiar a <strong>modo oscuro</strong>? La interfaz se verá con fondos oscuros.'
+                    : '¿Volver al <strong>modo claro</strong>? La interfaz se verá con fondos claros.'
+                }</p>
+            </div>`,
+            showCancelButton: true,
+            confirmButtonText: esOscuro ? 'Sí, activar oscuro' : 'Sí, activar claro',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: esOscuro ? '#334155' : '#f59e0b',
+        }).then((result) => {
+            if (!result.isConfirmed) {
+                checkbox.checked = !esOscuro;
+            }
+        });
+    });
+</script>
+@endpush
 @endsection
